@@ -2,3 +2,7 @@ baseURL = 'https://gonzague.dev/'
 languageCode = 'en-us'
 title = 'Gonzague.dev'
 theme = 'PaperMod'
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
