@@ -37,15 +37,15 @@
     snowflake.className = 'snowflake';
     snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
     snowflake.style.left = Math.random() * 100 + '%';
-    snowflake.style.animationDuration = (Math.random() * 5 + 8) + 's';
-    snowflake.style.animationDelay = Math.random() * 5 + 's';
+    const duration = Math.random() * 5 + 8;
+    snowflake.style.animationDuration = duration + 's';
     snowflake.style.fontSize = (Math.random() * 0.8 + 0.8) + 'em';
     document.body.appendChild(snowflake);
     
     setTimeout(() => {
       snowflake.remove();
       createSnowflake();
-    }, (parseFloat(snowflake.style.animationDuration) + parseFloat(snowflake.style.animationDelay)) * 1000);
+    }, duration * 1000);
   }
   
   if (typeof window !== 'undefined') {
