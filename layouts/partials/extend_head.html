@@ -24,7 +24,7 @@
 }
 
 .snowflake.wind-sweep {
-  animation: windSweep 1.5s ease-out forwards !important;
+  animation: windSweep 3s ease-out forwards !important;
   --sweepX: 150vw;
   --sweepY: -50vh;
   --rotation: 720deg;
@@ -160,7 +160,7 @@
       for (let i = 0; i < numFlakes; i++) {
         setTimeout(() => createSnowflake(), i * 300);
       }
-    }, 1500);
+    }, 3000);
     
     // Schedule next wind
     setTimeout(triggerWind, 20000); // Every 20 seconds
