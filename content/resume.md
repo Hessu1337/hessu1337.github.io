@@ -1,7 +1,7 @@
 +++
 title = "Resume"
 date = 2025-01-27T00:00:00+01:00
-description = "Professional resume and CV of Gonzague Pagin - Cloud Systems Engineer"
+description = "Professional resume and CV of Gonzague Pagin - Cloud System Engineer"
 draft = false
 +++
 
@@ -12,14 +12,14 @@ draft = false
 </div>
 
 ## Gonzague Pagin
-**Cloud Systems Engineer**  
+**Cloud System Engineer**  
 37 years old, Biel/Bienne, Switzerland
 
 ---
 
 ## Profile
 
-As a Cloud Systems Engineer, I leverage strong expertise in DevOps practices and tools to efficiently orchestrate and automate deployments in cloud environments. My professional background includes leading the deployment of complex IT systems, ensuring performance and scalability even under demanding conditions.
+As a Cloud System Engineer, I leverage strong expertise in DevOps practices and tools to efficiently orchestrate and automate deployments in cloud environments. My professional background includes leading the deployment of complex IT systems, ensuring performance and scalability even under demanding conditions.
 
 I have also gained significant hands-on experience with major public cloud providers, strengthening my ability to design robust, modern architectures.
 
