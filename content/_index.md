@@ -6,6 +6,63 @@ tags = ["DevOps", "Engineering", "Career", "Personal"]
 draft = false
 +++
 
+<style>
+.snowflake {
+  position: fixed;
+  top: -10px;
+  z-index: 9999;
+  user-select: none;
+  cursor: default;
+  animation-name: snowfall;
+  animation-duration: 10s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  color: #fff;
+  font-size: 1em;
+  opacity: 0.8;
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(0vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0.3;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const snowflakes = ['❄', '❅', '❆'];
+  const numFlakes = 30;
+  
+  function createSnowflake() {
+    const snowflake = document.createElement('div');
+    snowflake.className = 'snowflake';
+    snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+    snowflake.style.left = Math.random() * 100 + '%';
+    snowflake.style.animationDuration = (Math.random() * 5 + 8) + 's';
+    snowflake.style.animationDelay = Math.random() * 5 + 's';
+    snowflake.style.fontSize = (Math.random() * 0.8 + 0.8) + 'em';
+    document.body.appendChild(snowflake);
+    
+    setTimeout(() => {
+      snowflake.remove();
+      createSnowflake();
+    }, (parseFloat(snowflake.style.animationDuration) + parseFloat(snowflake.style.animationDelay)) * 1000);
+  }
+  
+  window.addEventListener('load', function() {
+    for (let i = 0; i < numFlakes; i++) {
+      setTimeout(() => createSnowflake(), i * 300);
+    }
+  });
+})();
+</script>
+
 ## 👋 About Me
 
 Hey there — I’m **Gonzague**, a **DevOps engineer** currently based in **Switzerland**.  
