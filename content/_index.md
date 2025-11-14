@@ -36,5 +36,9 @@ I believe good ideas come from balance; between pressure and perspective.
 
 ## 🔗 Connect With Me
 
-I’m always happy to connect with like-minded engineers, teams, and curious minds.  
+I'm always happy to connect with like-minded engineers, teams, and curious minds.  
 You can find me on [**LinkedIn**](https://www.linkedin.com/in/gonzague-pagin) — feel free to reach out!
+
+## 📄 Resume
+
+Want to know more about my professional background? Check out my [**resume**](/resume/) or [download the PDF version](/cv-gp-2025-en.pdf).
