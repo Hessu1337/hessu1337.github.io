@@ -26,35 +26,40 @@
   }
 }
 
-.snow-pile {
+.heading-snowflake {
   position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 100%;
-  height: 8px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.6));
-  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  top: -10px;
   pointer-events: none;
   z-index: 1;
-  transform-origin: left center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-size: 0.6em;
+  color: #fff;
+  text-shadow: 0 0 2px rgba(200, 200, 255, 0.8);
+  opacity: 0;
+  animation: snowLand 0.5s ease-out forwards;
 }
 
-.snow-pile.wind-blow {
-  animation: windBlow 1.5s ease-out forwards;
-}
-
-@keyframes windBlow {
+@keyframes snowLand {
   0% {
-    transform: translateX(0) scaleX(1);
-    opacity: 1;
-  }
-  50% {
-    transform: translateX(30px) scaleX(0.8) skewX(-20deg);
-    opacity: 0.5;
+    transform: translateY(-20px);
+    opacity: 0;
   }
   100% {
-    transform: translateX(100px) scaleX(0.3) skewX(-30deg);
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+}
+
+.heading-snowflake.wind-blow {
+  animation: snowBlowAway 1.2s ease-out forwards;
+}
+
+@keyframes snowBlowAway {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-30px) translateX(80px) rotate(180deg);
     opacity: 0;
   }
 }
@@ -88,40 +93,51 @@ h1, h2, h3, h4, h5, h6 {
   // Snow accumulation on headings
   function setupSnowAccumulation() {
     const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    const snowflakeSymbols = ['❄', '❅', '❆'];
     
     headings.forEach(heading => {
-      const snowPile = document.createElement('div');
-      snowPile.className = 'snow-pile';
-      snowPile.style.height = '0px';
-      heading.appendChild(snowPile);
-      heading.snowPile = snowPile;
+      heading.snowflakes = [];
     });
     
-    // Gradually increase snow pile height
-    let snowHeight = 0;
-    const growInterval = setInterval(() => {
-      snowHeight = Math.min(snowHeight + 0.5, 8);
-      headings.forEach(heading => {
-        if (heading.snowPile && !heading.snowPile.classList.contains('wind-blow')) {
-          heading.snowPile.style.height = snowHeight + 'px';
-        }
-      });
-    }, 2000);
+    // Add snowflakes gradually to headings
+    function addSnowflakeToHeading() {
+      if (headings.length === 0) return;
+      
+      const heading = headings[Math.floor(Math.random() * headings.length)];
+      const width = heading.offsetWidth;
+      
+      const snowflake = document.createElement('span');
+      snowflake.className = 'heading-snowflake';
+      snowflake.textContent = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
+      snowflake.style.left = Math.random() * (width - 20) + 'px';
+      
+      heading.appendChild(snowflake);
+      heading.snowflakes.push(snowflake);
+    }
+    
+    // Add a snowflake every 3-5 seconds
+    function scheduleNextSnowflake() {
+      const delay = Math.random() * 2000 + 3000; // 3-5 seconds
+      setTimeout(() => {
+        addSnowflakeToHeading();
+        scheduleNextSnowflake();
+      }, delay);
+    }
+    
+    scheduleNextSnowflake();
     
     // Wind effect at random intervals
     function triggerWind() {
       headings.forEach(heading => {
-        if (heading.snowPile) {
-          heading.snowPile.classList.add('wind-blow');
+        heading.snowflakes.forEach(snowflake => {
+          snowflake.classList.add('wind-blow');
           
           setTimeout(() => {
-            heading.snowPile.classList.remove('wind-blow');
-            heading.snowPile.style.height = '0px';
-          }, 1500);
-        }
+            snowflake.remove();
+          }, 1200);
+        });
+        heading.snowflakes = [];
       });
-      
-      snowHeight = 0;
       
       // Schedule next wind
       const nextWind = Math.random() * 10000 + 25000; // 25-35 seconds
