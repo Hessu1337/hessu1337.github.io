@@ -1,0 +1,143 @@
+{{- /* Custom head content for snow effect */ -}}
+<style>
+.snowflake {
+  position: fixed;
+  top: -10px;
+  z-index: 9999;
+  user-select: none;
+  cursor: default;
+  color: #fff;
+  font-size: 1em;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.snowflake.falling {
+  animation-name: snowfall;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.snowflake.stopped {
+  animation: none !important;
+}
+
+.snowflake.wind-sweep {
+  animation: windSweep 1.5s ease-out forwards !important;
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(0vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes windSweep {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(150vw) translateY(-50vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const snowflakes = ['❄', '❅', '❆'];
+  const numFlakes = 35;
+  const stopProbability = 0.35; // 35% chance to stop
+  let allSnowflakes = [];
+  
+  function createSnowflake() {
+    const snowflake = document.createElement('div');
+    snowflake.className = 'snowflake falling';
+    snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+    snowflake.style.left = Math.random() * 100 + '%';
+    snowflake.style.fontSize = (Math.random() * 0.8 + 0.8) + 'em';
+    
+    const duration = Math.random() * 5 + 8;
+    snowflake.style.animationDuration = duration + 's';
+    
+    document.body.appendChild(snowflake);
+    allSnowflakes.push(snowflake);
+    
+    // Decide if this snowflake should stop mid-fall
+    if (Math.random() < stopProbability) {
+      const stopTime = Math.random() * 0.7 + 0.15; // Stop between 15% and 85% of the fall
+      const stopDelay = duration * stopTime * 1000;
+      
+      setTimeout(() => {
+        if (snowflake && snowflake.parentElement && !snowflake.classList.contains('wind-sweep')) {
+          const rect = snowflake.getBoundingClientRect();
+          snowflake.classList.remove('falling');
+          snowflake.classList.add('stopped');
+          snowflake.style.top = rect.top + 'px';
+          snowflake.style.left = rect.left + 'px';
+          snowflake.style.animation = 'none';
+        }
+      }, stopDelay);
+    }
+    
+    // Remove and recreate after duration (if not stopped)
+    setTimeout(() => {
+      if (snowflake && snowflake.parentElement && !snowflake.classList.contains('stopped')) {
+        const index = allSnowflakes.indexOf(snowflake);
+        if (index > -1) allSnowflakes.splice(index, 1);
+        snowflake.remove();
+        createSnowflake();
+      }
+    }, duration * 1000);
+  }
+  
+  // Wind sweep effect
+  function triggerWind() {
+    // Sweep all existing snowflakes
+    allSnowflakes.forEach(snowflake => {
+      if (snowflake && snowflake.parentElement) {
+        snowflake.classList.add('wind-sweep');
+        snowflake.classList.remove('falling', 'stopped');
+      }
+    });
+    
+    // Remove all snowflakes after animation
+    setTimeout(() => {
+      allSnowflakes.forEach(snowflake => {
+        if (snowflake && snowflake.parentElement) {
+          snowflake.remove();
+        }
+      });
+      allSnowflakes = [];
+      
+      // Recreate all snowflakes
+      for (let i = 0; i < numFlakes; i++) {
+        setTimeout(() => createSnowflake(), i * 300);
+      }
+    }, 1500);
+    
+    // Schedule next wind
+    setTimeout(triggerWind, 20000); // Every 20 seconds
+  }
+  
+  if (typeof window !== 'undefined') {
+    window.addEventListener('load', function() {
+      // Start falling snow
+      for (let i = 0; i < numFlakes; i++) {
+        setTimeout(() => createSnowflake(), i * 300);
+      }
+      
+      // First wind after 20 seconds
+      setTimeout(triggerWind, 20000);
+    });
+  }
+})();
+</script>
+
