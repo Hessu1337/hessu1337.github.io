@@ -25,17 +25,9 @@
 
 .snowflake.wind-sweep {
   animation: windSweep 1.5s ease-out forwards !important;
-}
-
-@keyframes snowfall {
-  0% {
-    transform: translateY(0vh) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) rotate(360deg);
-    opacity: 0.3;
-  }
+  --sweepX: 150vw;
+  --sweepY: -50vh;
+  --rotation: 720deg;
 }
 
 @keyframes windSweep {
@@ -44,8 +36,41 @@
     opacity: 1;
   }
   100% {
-    transform: translateX(150vw) translateY(-50vh) rotate(720deg);
+    transform: translateX(var(--sweepX)) translateY(var(--sweepY)) rotate(var(--rotation));
     opacity: 0;
+  }
+}
+
+@keyframes snowfallLeft {
+  0% {
+    transform: translateX(0) translateY(0vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-30px) translateY(100vh) rotate(360deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes snowfallRight {
+  0% {
+    transform: translateX(0) translateY(0vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(30px) translateY(100vh) rotate(360deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes snowfallStraight {
+  0% {
+    transform: translateX(0) translateY(0vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) translateY(100vh) rotate(360deg);
+    opacity: 0.3;
   }
 }
 </style>
@@ -66,6 +91,11 @@
     
     const duration = Math.random() * 5 + 8;
     snowflake.style.animationDuration = duration + 's';
+    
+    // Randomly choose a falling direction
+    const directions = ['snowfallLeft', 'snowfallRight', 'snowfallStraight'];
+    const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+    snowflake.style.animationName = randomDirection;
     
     document.body.appendChild(snowflake);
     allSnowflakes.push(snowflake);
@@ -100,11 +130,20 @@
   
   // Wind sweep effect
   function triggerWind() {
-    // Sweep all existing snowflakes
+    // Sweep all existing snowflakes with varied directions
     allSnowflakes.forEach(snowflake => {
       if (snowflake && snowflake.parentElement) {
         snowflake.classList.add('wind-sweep');
         snowflake.classList.remove('falling', 'stopped');
+        
+        // Vary the wind direction for each snowflake
+        const sweepX = Math.random() * 100 + 100; // 100-200vw
+        const sweepY = Math.random() * 60 - 30; // -30 to 30vh (some up, some down)
+        const rotation = Math.random() * 360 + 360; // 360-720 degrees
+        
+        snowflake.style.setProperty('--sweepX', sweepX + 'vw');
+        snowflake.style.setProperty('--sweepY', sweepY + 'vh');
+        snowflake.style.setProperty('--rotation', rotation + 'deg');
       }
     });
     
