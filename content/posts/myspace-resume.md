@@ -3,7 +3,7 @@ title = "Gonzague's MySpace - Cloud Engineer 2000s Edition"
 date = 2025-01-15T00:00:00+01:00
 description = "A nostalgic throwback resume in classic MySpace style"
 tags = ["fun", "retro", "career"]
-draft = true
+draft = false
 +++
 
 <style>
