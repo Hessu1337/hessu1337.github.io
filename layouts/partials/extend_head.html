@@ -1,29 +1,28 @@
-{{- /* Custom head content for snow effect */ -}}
+{{- /* Custom head content for spring petals effect */ -}}
 <style>
-.snowflake {
+.petal {
   position: fixed;
   top: -10px;
   z-index: 9999;
   user-select: none;
   cursor: default;
-  color: #fff;
   font-size: 1em;
-  opacity: 0.8;
+  opacity: 0.9;
   pointer-events: none;
 }
 
-.snowflake.falling {
-  animation-name: snowfall;
+.petal.falling {
+  animation-name: petalfall;
   animation-timing-function: linear;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
 
-.snowflake.stopped {
+.petal.stopped {
   animation: none !important;
 }
 
-.snowflake.wind-sweep {
+.petal.wind-sweep {
   animation: windSweep 3s ease-out forwards !important;
   --sweepX: 150vw;
   --sweepY: -50vh;
@@ -41,124 +40,124 @@
   }
 }
 
-@keyframes snowfallLeft {
+@keyframes petalfallLeft {
   0% {
     transform: translateX(0) translateY(0vh) rotate(0deg);
     opacity: 1;
   }
   100% {
     transform: translateX(-30px) translateY(100vh) rotate(360deg);
-    opacity: 0.3;
+    opacity: 0.4;
   }
 }
 
-@keyframes snowfallRight {
+@keyframes petalfallRight {
   0% {
     transform: translateX(0) translateY(0vh) rotate(0deg);
     opacity: 1;
   }
   100% {
     transform: translateX(30px) translateY(100vh) rotate(360deg);
-    opacity: 0.3;
+    opacity: 0.4;
   }
 }
 
-@keyframes snowfallStraight {
+@keyframes petalfallStraight {
   0% {
     transform: translateX(0) translateY(0vh) rotate(0deg);
     opacity: 1;
   }
   100% {
     transform: translateX(0) translateY(100vh) rotate(360deg);
-    opacity: 0.3;
+    opacity: 0.4;
   }
 }
 </style>
 
 <script>
 (function() {
-  const snowflakes = ['❄', '❅', '❆'];
-  const numFlakes = 35;
+  const petals = ['🌸', '🌺', '🌼', '🏵️'];
+  const numPetals = 35;
   const stopProbability = 0.35; // 35% chance to stop
-  let allSnowflakes = [];
+  let allPetals = [];
   
-  function createSnowflake() {
-    const snowflake = document.createElement('div');
-    snowflake.className = 'snowflake falling';
-    snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
-    snowflake.style.left = Math.random() * 100 + '%';
-    snowflake.style.fontSize = (Math.random() * 0.8 + 0.8) + 'em';
+  function createPetal() {
+    const petal = document.createElement('div');
+    petal.className = 'petal falling';
+    petal.textContent = petals[Math.floor(Math.random() * petals.length)];
+    petal.style.left = Math.random() * 100 + '%';
+    petal.style.fontSize = (Math.random() * 0.8 + 0.8) + 'em';
     
     const duration = Math.random() * 5 + 8;
-    snowflake.style.animationDuration = duration + 's';
+    petal.style.animationDuration = duration + 's';
     
     // Randomly choose a falling direction
-    const directions = ['snowfallLeft', 'snowfallRight', 'snowfallStraight'];
+    const directions = ['petalfallLeft', 'petalfallRight', 'petalfallStraight'];
     const randomDirection = directions[Math.floor(Math.random() * directions.length)];
-    snowflake.style.animationName = randomDirection;
+    petal.style.animationName = randomDirection;
     
-    document.body.appendChild(snowflake);
-    allSnowflakes.push(snowflake);
+    document.body.appendChild(petal);
+    allPetals.push(petal);
     
-    // Decide if this snowflake should stop mid-fall
+    // Decide if this petal should stop mid-fall
     if (Math.random() < stopProbability) {
       const stopTime = Math.random() * 0.7 + 0.15; // Stop between 15% and 85% of the fall
       const stopDelay = duration * stopTime * 1000;
       
       setTimeout(() => {
-        if (snowflake && snowflake.parentElement && !snowflake.classList.contains('wind-sweep')) {
-          const rect = snowflake.getBoundingClientRect();
-          snowflake.classList.remove('falling');
-          snowflake.classList.add('stopped');
-          snowflake.style.top = rect.top + 'px';
-          snowflake.style.left = rect.left + 'px';
-          snowflake.style.animation = 'none';
+        if (petal && petal.parentElement && !petal.classList.contains('wind-sweep')) {
+          const rect = petal.getBoundingClientRect();
+          petal.classList.remove('falling');
+          petal.classList.add('stopped');
+          petal.style.top = rect.top + 'px';
+          petal.style.left = rect.left + 'px';
+          petal.style.animation = 'none';
         }
       }, stopDelay);
     }
     
     // Remove and recreate after duration (if not stopped)
     setTimeout(() => {
-      if (snowflake && snowflake.parentElement && !snowflake.classList.contains('stopped')) {
-        const index = allSnowflakes.indexOf(snowflake);
-        if (index > -1) allSnowflakes.splice(index, 1);
-        snowflake.remove();
-        createSnowflake();
+      if (petal && petal.parentElement && !petal.classList.contains('stopped')) {
+        const index = allPetals.indexOf(petal);
+        if (index > -1) allPetals.splice(index, 1);
+        petal.remove();
+        createPetal();
       }
     }, duration * 1000);
   }
   
   // Wind sweep effect
   function triggerWind() {
-    // Sweep all existing snowflakes with varied directions
-    allSnowflakes.forEach(snowflake => {
-      if (snowflake && snowflake.parentElement) {
-        snowflake.classList.add('wind-sweep');
-        snowflake.classList.remove('falling', 'stopped');
+    // Sweep all existing petals with varied directions
+    allPetals.forEach(petal => {
+      if (petal && petal.parentElement) {
+        petal.classList.add('wind-sweep');
+        petal.classList.remove('falling', 'stopped');
         
-        // Vary the wind direction for each snowflake
+        // Vary the wind direction for each petal
         const sweepX = Math.random() * 100 + 100; // 100-200vw
         const sweepY = Math.random() * 60 - 30; // -30 to 30vh (some up, some down)
         const rotation = Math.random() * 360 + 360; // 360-720 degrees
         
-        snowflake.style.setProperty('--sweepX', sweepX + 'vw');
-        snowflake.style.setProperty('--sweepY', sweepY + 'vh');
-        snowflake.style.setProperty('--rotation', rotation + 'deg');
+        petal.style.setProperty('--sweepX', sweepX + 'vw');
+        petal.style.setProperty('--sweepY', sweepY + 'vh');
+        petal.style.setProperty('--rotation', rotation + 'deg');
       }
     });
     
-    // Remove all snowflakes after animation
+    // Remove all petals after animation
     setTimeout(() => {
-      allSnowflakes.forEach(snowflake => {
-        if (snowflake && snowflake.parentElement) {
-          snowflake.remove();
+      allPetals.forEach(petal => {
+        if (petal && petal.parentElement) {
+          petal.remove();
         }
       });
-      allSnowflakes = [];
+      allPetals = [];
       
-      // Recreate all snowflakes
-      for (let i = 0; i < numFlakes; i++) {
-        setTimeout(() => createSnowflake(), i * 300);
+      // Recreate all petals
+      for (let i = 0; i < numPetals; i++) {
+        setTimeout(() => createPetal(), i * 300);
       }
     }, 3000);
     
@@ -168,9 +167,9 @@
   
   if (typeof window !== 'undefined') {
     window.addEventListener('load', function() {
-      // Start falling snow
-      for (let i = 0; i < numFlakes; i++) {
-        setTimeout(() => createSnowflake(), i * 300);
+      // Start falling petals
+      for (let i = 0; i < numPetals; i++) {
+        setTimeout(() => createPetal(), i * 300);
       }
       
       // First wind after 20 seconds
