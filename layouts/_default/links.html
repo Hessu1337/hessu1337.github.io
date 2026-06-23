@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} | Gonzague Pagin</title>
+    <meta name="description" content="DevOps Engineer based in Switzerland. Connect with me on social media.">
+    <meta name="author" content="Gonzague Pagin">
+    <link rel="canonical" href="{{ .Permalink }}">
+    
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ .Permalink }}">
+    <meta property="og:title" content="{{ .Title }} | Gonzague Pagin">
+    <meta property="og:description" content="DevOps Engineer based in Switzerland. Connect with me.">
+    <meta property="og:image" content="https://gonzague.dev/og-image.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ .Permalink }}">
+    <meta property="twitter:title" content="{{ .Title }} | Gonzague Pagin">
+    <meta property="twitter:description" content="DevOps Engineer based in Switzerland. Connect with me.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg: #0f0f1e;
+            --bg-grad: #1a1a2e;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --card: rgba(30, 30, 50, 0.7);
+            --card-hover: rgba(45, 45, 70, 0.8);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--bg-grad) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 90%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 680px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .profile {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto 1.2rem;
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .avatar:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+        
+        .name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .handle {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .bio {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .link-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .link-item::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--link-color, var(--accent));
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .link-item:hover {
+            background: var(--card-hover);
+            transform: translateX(4px);
+            border-color: var(--link-color, var(--accent));
+        }
+        
+        .link-item:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .link-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: var(--link-color, var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .link-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+        
+        .link-content {
+            flex: 1;
+        }
+        
+        .link-title {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .link-subtitle {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        .link-arrow {
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            color: var(--text-muted);
+        }
+        
+        .link-item:hover .link-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* Platform-specific colors */
+        .link-whatsapp { --link-color: #25D366; }
+        .link-linkedin { --link-color: #0A66C2; }
+        .link-instagram { --link-color: #E1306C; }
+        .link-messenger { --link-color: #0084FF; }
+        .link-email { --link-color: #f59e0b; }
+        .link-website { --link-color: #6366f1; }
+        .link-github { --link-color: #24292e; }
+        
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .location-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.4rem 0.9rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 480px) {
+            .name { font-size: 1.6rem; }
+            .link-item { padding: 0.9rem 1.2rem; }
+            .avatar { width: 120px; height: 120px; font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile">
+            <div class="avatar">GP</div>
+            <h1 class="name">Gonzague Pagin</h1>
+            <p class="handle">@gonzague</p>
+            <p class="bio">DevOps Engineer · Building reliable, scalable systems · Kubernetes, Terraform, CI/CD · Based in Switzerland 🇨🇭</p>
+            <div class="location-badge">
+                <svg style="width: 14px; height: 14px; margin-right: 6px; fill: var(--text-muted);" viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                Bienne, Switzerland
+            </div>
+        </div>
+        
+        <div class="links">
+            <a href="https://wa.me/33633103851" class="link-item link-whatsapp" target="_blank" rel="noopener">
+                <div class="link-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                    </svg>
+                </div>
+                <div class="link-content">
+                    <span class="link-title">WhatsApp</span>
+                    <span class="link-subtitle">Shoot me a message</span>
+                </div>
+                <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            
+            <a href="https://www.linkedin.com/in/gonzague-pagin" class="link-item link-linkedin" target="_blank" rel="noopener">
+                <div class="link-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.935v5.671H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.063 2.063 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                </div>
+                <div class="link-content">
+                    <span class="link-title">LinkedIn</span>
+                    <span class="link-subtitle">Professional profile</span>
+                </div>
+                <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            
+            <a href="https://instagram.com/gonzague.pagin" class="link-item link-instagram" target="_blank" rel="noopener">
+                <div class="link-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                    </svg>
+                </div>
+                <div class="link-content">
+                    <span class="link-title">Instagram</span>
+                    <span class="link-subtitle">@gonzague.pagin</span>
+                </div>
+                <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            
+            <a href="https://m.me/hessu1337" class="link-item link-messenger" target="_blank" rel="noopener">
+                <div class="link-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M.36 11.064C.36 4.955 4.955 0 11.064 0c6.109 0 10.704 4.955 10.704 11.064 0 6.109-4.595 11.064-10.704 11.064-1.064 0-2.04-.18-3.016-.36L.36 24l2.196-7.736C.9 14.6 0 12.92 0 11.064zm10.704-8.904c-4.776 0-8.544 3.768-8.544 8.544 0 1.56.48 3.024 1.2 4.392l.18.36-.72 2.448 2.52-.72.36.18c1.368.72 2.832 1.2 4.392 1.2 4.776 0 8.544-3.768 8.544-8.544s-3.768-8.544-8.544-8.544zm5.232 10.176c-.18.264-.612.444-1.044.396-.18-.036-.36-.036-.54-.036-1.068-.108-1.912-.592-2.744-1.692-.564-.744-1.08-1.476-1.728-1.476-.084 0-.24.012-.396.06-.54.144-1.044.66-1.5 1.184-.312.372-.528.42-.876.264-.336-.144-.912-.48-1.74-1.224-.6-.54-1.248-1.188-1.824-1.884-.072-.108-.06-.312.048-.444.144-.18.384-.372.528-.516.168-.144.252-.228.384-.372.144-.144.324-.288.492-.228.18.06.408.36.54.48.144.144.312.348.42.468.084.096.144.06.192-.024l.612-.792c.348-.444.72-.924 1.116-1.08.348-.144.696-.084.936.084.3.18.48.432.6.66.168.264.348.468.612.48.324.024.576-.18.792-.42.228-.228.468-.504.792-.588.348-.108.78-.084 1.176.216.36.312.612.696.792 1.08.12.252.12.504.036.756-.084.252-.288.468-.492.696-.168.18-.36.36-.48.588-.06.144-.024.24.072.324.144.108.324.228.516.372z"/>
+                    </svg>
+                </div>
+                <div class="link-content">
+                    <span class="link-title">Messenger</span>
+                    <span class="link-subtitle">Chat with me</span>
+                </div>
+                <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            
+            <a href="https://gonzague.dev" class="link-item link-website" target="_blank" rel="noopener">
+                <div class="link-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95a15.65 15.65 0 0 0-1.38-3.55A8.03 8.03 0 0 1 18.92 8zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.55A7.987 7.987 0 0 1 5.08 16zm2.95-8H5.08a7.987 7.987 0 0 1 4.33-3.55A15.65 15.65 0 0 0 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/>
+                    </svg>
+                </div>
+                <div class="link-content">
+                    <span class="link-title">Website</span>
+                    <span class="link-subtitle">gonzague.dev</span>
+                </div>
+                <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>Built with ❤️ in Switzerland</p>
+        </div>
+    </div>
+</body>
+</html>
