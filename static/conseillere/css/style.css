@@ -1,0 +1,133 @@
+:root {
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --border: #dde3ec;
+  --text: #1d2433;
+  --muted: #6b7486;
+  --accent: #00008f;
+  --accent-soft: #e8ebfa;
+  --danger: #d32f2f;
+  --ok: #2e7d32;
+
+  --c-p1: #b8d4f0;
+  --c-emp: #c7c2e8;
+  --c-p2: #9ba1ba;
+  --c-p3: #9fd2b4;
+  --c-lacune: #efadb8;
+  --c-besoin: #e53935;
+  --c-revenu: #3b6fd8;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+button, .btn, input, select { font: inherit; }
+
+/* ---- Barre supérieure */
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 10px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.brand strong { font-size: 16px; color: var(--accent); margin-right: 8px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+button, .btn {
+  padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface); color: var(--text); cursor: pointer;
+}
+button:hover, .btn:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.muted { color: var(--muted); }
+
+/* ---- Mise en page */
+.layout { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 20px; padding: 20px; align-items: start; }
+@media (max-width: 960px) { .layout { grid-template-columns: 1fr; } }
+
+/* ---- Formulaire */
+.donnees {
+  position: sticky; top: 72px; max-height: calc(100vh - 92px); overflow: auto;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+}
+@media (max-width: 960px) { .donnees { position: static; max-height: none; } }
+.donnees details { border-bottom: 1px solid var(--border); }
+.donnees details:last-child { border-bottom: 0; }
+.donnees summary {
+  padding: 12px 16px; font-weight: 600; cursor: pointer; list-style: none;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.donnees summary::after { content: "+"; color: var(--muted); }
+.donnees details[open] summary::after { content: "−"; }
+.champs { padding: 0 16px 14px; display: grid; gap: 10px; }
+.champ { display: grid; gap: 3px; }
+.champ label { font-size: 12.5px; color: var(--muted); }
+.champ .aide { font-size: 11.5px; color: var(--muted); }
+.champ input[type=number], .champ input[type=text], .champ input[type=date], .champ select {
+  width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background: #fff;
+}
+.champ input:focus, .champ select:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+.champ.bool { grid-template-columns: auto 1fr; align-items: center; gap: 8px; }
+.champ.bool label { color: var(--text); font-size: 13px; }
+.unite { position: relative; }
+.unite input { padding-right: 44px !important; }
+.unite span { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--muted); pointer-events: none; }
+.grille4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+
+/* ---- Onglets et panneaux */
+.onglets { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; }
+.onglets button {
+  border: 0; border-bottom: 3px solid transparent; border-radius: 0; background: none;
+  padding: 10px 14px; color: var(--muted); white-space: nowrap;
+}
+.onglets button[aria-selected=true] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.panneau { display: none; }
+.panneau.actif { display: block; }
+.carte { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; }
+.carte h2 { margin: 0 0 12px; font-size: 16px; }
+.carte h3 { margin: 0 0 8px; font-size: 14px; }
+
+.kpis { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 12px; }
+.kpi .label { color: var(--muted); font-size: 13px; }
+.kpi .valeur { font-size: 22px; font-weight: 700; color: var(--danger); font-variant-numeric: tabular-nums; }
+.kpi .valeur.ok { color: var(--ok); }
+
+.graph svg { width: 100%; height: auto; display: block; }
+.legende { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 6px; }
+.legende i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 5px; vertical-align: -2px; }
+.legende i.ligne { height: 3px; vertical-align: 2px; }
+
+/* ---- Tableau des rentes */
+.table-wrap { overflow-x: auto; }
+table.rentes { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 13px; }
+table.rentes th, table.rentes td { padding: 6px 10px; text-align: right; white-space: nowrap; }
+table.rentes th:first-child, table.rentes td:first-child { text-align: left; white-space: normal; }
+table.rentes thead th { background: var(--accent-soft); font-weight: 600; vertical-align: bottom; }
+table.rentes tbody tr { border-bottom: 1px solid #eef1f6; }
+table.rentes tr.groupe td { font-weight: 600; }
+table.rentes tr.detail td:first-child { padding-left: 30px; color: var(--muted); }
+table.rentes tr.total td { font-weight: 700; border-top: 2px solid var(--border); }
+table.rentes td.neg { color: var(--danger); }
+table.rentes td.pos { color: var(--ok); }
+.swatch { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 7px; vertical-align: -1px; }
+
+.infos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 24px; }
+.info .label { font-size: 12px; color: var(--muted); }
+.info .valeur { font-weight: 600; font-variant-numeric: tabular-nums; }
+ul.notes { margin: 0; padding-left: 18px; color: var(--muted); font-size: 12.5px; }
+
+.print-only { display: none; }
+
+@media print {
+  body { background: #fff; }
+  .topbar, .donnees, .onglets { display: none; }
+  .layout { display: block; padding: 0; }
+  .print-only { display: block; color: var(--accent); font-size: 20px; }
+  .panneau { display: block !important; break-before: page; }
+  .panneau:first-child { break-before: auto; }
+  .carte { border: 0; padding: 0 0 12px; break-inside: avoid; }
+}

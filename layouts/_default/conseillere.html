@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ .Title }} | Gonzague Pagin</title>
+    <meta name="description" content="Bilan de prévoyance suisse : incapacité de gain (maladie, accident), perte d'emploi et retraite, sur les 3 piliers.">
+    <meta name="author" content="Gonzague Pagin">
+    <link rel="canonical" href="{{ .Permalink }}">
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ .Permalink }}">
+    <meta property="og:title" content="{{ .Title }} | Gonzague Pagin">
+    <meta property="og:description" content="Bilan de prévoyance suisse : incapacité de gain (maladie, accident), perte d'emploi et retraite, sur les 3 piliers.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ .Permalink }}">
+    <meta property="twitter:title" content="{{ .Title }} | Gonzague Pagin">
+    <meta property="twitter:description" content="Bilan de prévoyance suisse : incapacité de gain (maladie, accident), perte d'emploi et retraite, sur les 3 piliers.">
+
+    <link rel="stylesheet" href="/conseillere/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <strong>Bilan de prévoyance</strong>
+      <span class="muted" id="annee-params"></span>
+    </div>
+    <div class="actions">
+      <button type="button" id="btn-exporter">Enregistrer le dossier</button>
+      <label class="btn">Ouvrir un dossier<input type="file" id="btn-importer" accept="application/json" hidden></label>
+      <button type="button" id="btn-reset">Réinitialiser</button>
+      <button type="button" class="primary" id="btn-imprimer">Imprimer le rapport</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="donnees" id="formulaire" aria-label="Données de base"></aside>
+
+    <section class="resultats">
+      <h1 class="print-only" id="titre-rapport">Bilan de prévoyance</h1>
+      <nav class="onglets" role="tablist" id="onglets"></nav>
+      <div id="panneaux"></div>
+    </section>
+  </main>
+
+  <script src="/conseillere/js/params.js"></script>
+  <script src="/conseillere/js/defaults.js"></script>
+  <script src="/conseillere/js/engine.js"></script>
+  <script src="/conseillere/js/app.js"></script>
+</body>
+</html>
