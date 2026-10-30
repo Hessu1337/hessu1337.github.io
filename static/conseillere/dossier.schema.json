@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Dossier de bilan de prévoyance",
+  "description": "Fichier importé par « Ouvrir un dossier ». Montants en CHF (nombres, sans apostrophe ni texte). Pourcentages exprimés de 0 à 100 (70 = 70 %, pas 0.7). Une clé absente prend la valeur par défaut de l'appli ; une clé inconnue est ignorée. Si une information ne figure pas dans les documents, omettre la clé plutôt que l'inventer.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "personne": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "nom": { "type": "string", "description": "Nom du client, affiché dans le rapport." },
+        "naissance": { "type": "string", "format": "date", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "Date de naissance, format AAAA-MM-JJ." },
+        "ageRetraite": { "type": "integer", "minimum": 63, "maximum": 70, "default": 65, "description": "Âge de départ à la retraite souhaité (référence 65 ; anticipation dès 63, ajournement jusqu'à 70)." },
+        "enfants": { "type": "boolean", "default": false, "description": "Obligation d'entretien envers des enfants de moins de 25 ans (influence le taux et le délai d'attente du chômage)." }
+      }
+    },
+    "revenu": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "brut": { "type": "number", "minimum": 0, "description": "Revenu brut annuel en CHF (salaire AVS, 13e salaire compris). Source : certificat de salaire, contrat." },
+        "maintienMode": { "enum": ["echelle", "manuel"], "default": "echelle", "description": "Maintien du salaire en cas de maladie : 'echelle' = échelle cantonale (CO 324a), 'manuel' = durée prévue par le contrat ou la CCT (renseigner maintienJours)." },
+        "canton": { "enum": ["AG", "AI", "AR", "BE", "BL", "BS", "FR", "GE", "GL", "GR", "JU", "LU", "NE", "NW", "OW", "SG", "SH", "SO", "SZ", "TG", "TI", "UR", "VD", "VS", "ZG", "ZH"], "description": "Canton du lieu de travail (code à 2 lettres). Utilisé si maintienMode = 'echelle'." },
+        "anneesService": { "type": "integer", "minimum": 1, "description": "Année de service en cours chez l'employeur actuel (1 = première année). Utilisé si maintienMode = 'echelle'." },
+        "maintienJours": { "type": "integer", "minimum": 0, "description": "Durée du maintien du salaire en jours. Utilisé si maintienMode = 'manuel'." }
+      }
+    },
+    "besoin": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Objectifs de revenu, en % du revenu brut. Choix du conseiller, pas une donnée des documents.",
+      "properties": {
+        "igCourt": { "type": "number", "minimum": 0, "default": 100, "description": "Incapacité de gain à court terme (maintien du salaire et indemnités journalières), %." },
+        "igLong": { "type": "number", "minimum": 0, "default": 80, "description": "Incapacité de gain à long terme (rentes), %." },
+        "retraite": { "type": "number", "minimum": 0, "default": 70, "description": "Retraite, %." },
+        "chomage": { "type": "number", "minimum": 0, "default": 100, "description": "Perte d'emploi, %." },
+        "inflation": { "type": "boolean", "default": false, "description": "Indexer le besoin à la retraite sur le renchérissement." },
+        "tauxInflation": { "type": "number", "default": 1, "description": "Renchérissement annuel des prix, %." }
+      }
+    },
+    "avs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ram": { "type": "number", "minimum": 0, "description": "Revenu annuel moyen déterminant (RAM) en CHF. Source : calcul anticipé de rente ou extrait de compte individuel (CI). À défaut, approximer par le revenu brut (plafonné à 90'720 pour la rente maximale)." },
+        "anneesManquantes": { "type": "integer", "minimum": 0, "maximum": 44, "default": 0, "description": "Années de cotisation AVS manquantes (lacunes : séjour à l'étranger, études sans cotisation…). Source : extrait CI." }
+      }
+    },
+    "lpp": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "2e pilier. Source principale : certificat de prévoyance de la caisse de pension.",
+      "properties": {
+        "avoir": { "type": "number", "minimum": 0, "description": "Avoir de vieillesse actuel (prestation de libre passage), CHF." },
+        "modeSalaire": { "enum": ["lpp", "complet", "manuel"], "default": "lpp", "description": "Salaire assuré : 'lpp' = minimum LPP (brut − déduction de coordination), 'complet' = salaire brut sans déduction, 'manuel' = montant du certificat (renseigner salaireAssure)." },
+        "salaireAssure": { "type": "number", "minimum": 0, "description": "Salaire assuré / coordonné indiqué sur le certificat, CHF/an. Utilisé si modeSalaire = 'manuel'." },
+        "bonifMode": { "enum": ["lpp", "plan"], "default": "lpp", "description": "'lpp' = bonifications minimales légales (7/10/15/18 %), 'plan' = taux du règlement (renseigner bonifs)." },
+        "bonifs": { "type": "array", "items": { "type": "number", "minimum": 0 }, "minItems": 4, "maxItems": 4, "default": [7, 10, 15, 18], "description": "Bonifications de vieillesse en % du salaire assuré pour les tranches d'âge 25-34, 35-44, 45-54, 55+. Utilisé si bonifMode = 'plan'." },
+        "tauxInteret": { "type": "number", "default": 1.25, "description": "Taux d'intérêt projeté sur l'avoir, % (minimum LPP 2026 : 1,25)." },
+        "tauxConversion": { "type": "number", "default": 6.8, "description": "Taux de conversion à la retraite, % (minimum LPP : 6,8 ; souvent plus bas dans le règlement)." },
+        "renteCertificat": { "type": "number", "minimum": 0, "default": 0, "description": "Rente de vieillesse annuelle projetée figurant sur le certificat, CHF/an. Si > 0, remplace la projection calculée. 0 = calculer." },
+        "rachatAnnuel": { "type": "number", "minimum": 0, "default": 0, "description": "Rachat volontaire prévu chaque année, CHF." },
+        "partCapital": { "type": "number", "minimum": 0, "maximum": 100, "default": 0, "description": "Part de l'avoir retirée en capital à la retraite, %." },
+        "invMode": { "enum": ["pct", "montant", "lppmin"], "default": "lppmin", "description": "Rente d'invalidité LPP : 'pct' = % du salaire (invPct), 'montant' = montant annuel du certificat (invMontant), 'lppmin' = minimum LPP calculé." },
+        "invPct": { "type": "number", "minimum": 0, "description": "Rente d'invalidité en % du salaire. Utilisé si invMode = 'pct'." },
+        "invMontant": { "type": "number", "minimum": 0, "description": "Rente d'invalidité annuelle du certificat, CHF/an. Utilisé si invMode = 'montant'." }
+      }
+    },
+    "ij": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Assurance perte de gain maladie (IJM) de l'employeur. Source : règlement du personnel, CCT, police IJM.",
+      "properties": {
+        "taux": { "type": "number", "minimum": 0, "default": 80, "description": "Indemnité journalière en % du salaire." },
+        "finJour": { "type": "integer", "minimum": 1, "default": 720, "description": "Dernier jour d'indemnisation (généralement 720 ou 730). S'applique aussi aux IJ LAA." },
+        "plafond": { "type": "number", "minimum": 0, "default": 0, "description": "Salaire maximal assuré par l'IJM, CHF/an. 0 = sans plafond." }
+      }
+    },
+    "p3": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "affilieLPP": { "type": "boolean", "default": true, "description": "Affilié à une caisse de pension (détermine le maximum 3a)." },
+        "capital": { "type": "number", "minimum": 0, "default": 0, "description": "Capital 3a actuel (tous comptes et polices), CHF." },
+        "versement": { "type": "number", "minimum": 0, "default": 0, "description": "Versement 3a annuel, CHF (maximum 2026 : 7'258 avec LPP, 36'288 sans)." },
+        "rendement": { "type": "number", "default": 1, "description": "Rendement annuel projeté du 3a, %." },
+        "tauxMarginal": { "type": "number", "minimum": 0, "maximum": 100, "default": 25, "description": "Taux marginal d'imposition, % (pour l'économie d'impôt 3a). Source : avis de taxation." },
+        "renteIG": { "type": "number", "minimum": 0, "default": 0, "description": "Rente d'incapacité de gain d'une assurance privée, CHF/an." },
+        "delaiIG": { "type": "integer", "minimum": 0, "default": 720, "description": "Délai d'attente de cette rente privée, jours." },
+        "autresRevenus": { "type": "number", "minimum": 0, "default": 0, "description": "Autres revenus annuels à la retraite (3b, fortune, immobilier), CHF/an." }
+      }
+    },
+    "chomage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "moisCotisation": { "type": "integer", "minimum": 0, "maximum": 24, "default": 24, "description": "Mois cotisés à l'assurance chômage durant les 2 dernières années." },
+        "preavisMois": { "type": "integer", "minimum": 0, "default": 3, "description": "Délai de congé, mois. Source : contrat de travail." },
+        "horizonMois": { "type": "integer", "minimum": 1, "default": 24, "description": "Durée analysée, mois." }
+      }
+    },
+    "hyp": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Hypothèses de calcul (choix du conseiller).",
+      "properties": {
+        "degreInv": { "type": "number", "minimum": 0, "maximum": 100, "default": 100, "description": "Degré d'invalidité simulé, %." },
+        "esperanceVie": { "type": "number", "minimum": 0, "default": 20.4, "description": "Durée de la retraite en années (OFS 2024 à 65 ans : hommes 20,4, femmes 23,0)." },
+        "tauxActualisation": { "type": "number", "default": 0, "description": "Taux d'actualisation du besoin en capital, %." }
+      }
+    }
+  }
+}
